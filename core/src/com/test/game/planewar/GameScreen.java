@@ -67,7 +67,7 @@ public class GameScreen extends Stage implements Screen {
 		texture = new Texture("plane_bg0.jpg");
 		region1 = new TextureRegion(texture, 325, 458);
 		region2 = new TextureRegion(texture, 325, 458);
-		plane = new Plane(Gdx.graphics.getWidth()/2-40, 0, 60, 60);
+		plane = new Plane(Gdx.graphics.getWidth()/2-40, 0, 50, 50);
 		addActor(plane);
 	}
 

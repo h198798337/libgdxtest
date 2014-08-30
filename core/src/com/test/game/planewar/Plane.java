@@ -2,16 +2,24 @@ package com.test.game.planewar;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Plane extends Actor{
+	
+	float time = 0;
+	long duration = 0;
 	
 	float x, y, moveX, moveY, offsetX, offsetY, 
 	touch_X, touch_Y, touchBaseX, touchBaseY, 
 	dis_X_temp, dis_Y_temp, width, height;
 
 	Texture plane;
+	TextureRegion[][] planeRegion;
+	Animation planeFly;
+	Animation planeDestroy;
 
 	public Plane(float x, float y, float width, float height) {
 		this.x = moveX = x;
@@ -19,13 +27,19 @@ public class Plane extends Actor{
 		this.width = width;
 		this.height = height;
 		plane = new Texture("plane.png");
+		planeRegion = TextureRegion.split(plane, 71, 86);
 		
+		planeFly = new Animation(0.1f, planeRegion[0][0], planeRegion[1][0]);
+		duration = System.currentTimeMillis();
 	}
 	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		touch();
-		batch.draw(plane, moveX + offsetX, moveY + offsetY, width, height);
+		time += Gdx.graphics.getDeltaTime();
+		if(System.currentTimeMillis() - duration < 60000){
+			batch.draw(planeFly.getKeyFrame(time, true), moveX + offsetX, moveY + offsetY, width, height);
+		}
 	}
 	
 	void touch() {
