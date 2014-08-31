@@ -16,6 +16,7 @@ public class Enemy extends Actor{
 		switch (type) {
 		case 0:
 //			enemy = new TextureRegion(new Texture("planes.jpg"), )
+			
 			break;
 		case 1:
 
