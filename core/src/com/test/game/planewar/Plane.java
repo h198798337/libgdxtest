@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Plane extends Actor{
+	int hp = 1;
 	
-	float time = 0;
-	long duration = 0;
+	float durationTime = 0;
 	
 	float x, y, moveX, moveY, offsetX, offsetY, 
 	touch_X, touch_Y, touchBaseX, touchBaseY, 
@@ -30,19 +30,29 @@ public class Plane extends Actor{
 		planeRegion = TextureRegion.split(plane, 71, 86);
 		
 		planeFly = new Animation(0.1f, planeRegion[0][0], planeRegion[1][0]);
-		duration = System.currentTimeMillis();
+		planeDestroy = new Animation(1.8f, planeRegion[2][0], planeRegion[3][0], planeRegion[4][0], planeRegion[5][0]
+				, planeRegion[5][0], planeRegion[5][0], planeRegion[5][0], planeRegion[5][0]);
 	}
 	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		touch();
-		time += Gdx.graphics.getDeltaTime();
-		if(System.currentTimeMillis() - duration < 60000){
-			batch.draw(planeFly.getKeyFrame(time, true), moveX + offsetX, moveY + offsetY, width, height);
+		durationTime += Gdx.graphics.getDeltaTime();
+		switch (hp) {
+		case 0:
+			planeDestroy(batch);
+			break;
+		case 1:
+			planeAlive(batch);
+			break;
+		default:
+			break;
 		}
 	}
 	
 	void touch() {
+		if(hp <= 0)//hp降为0时，触摸无效
+			return;
 		// justTouched 是开始按下手指的第一个点。
 		if (Gdx.input.justTouched()) {
 			touchBaseX = Gdx.input.getX(0);
@@ -67,5 +77,21 @@ public class Plane extends Actor{
 			x = moveX;
 			y = moveY;
 		}
+	}
+	
+	/**
+	 * 当战机仍然生存时动作
+	 */
+	private void planeAlive(Batch batch) {
+		batch.draw(planeFly.getKeyFrame(durationTime, true), moveX + offsetX, moveY + offsetY, width, height);
+	}
+	
+	/**
+	 * 飞机销毁时动作
+	 * @param batch
+	 */
+	private void planeDestroy(Batch batch){
+		batch.draw(planeDestroy.getKeyFrame(durationTime), moveX + offsetX, moveY + offsetY, width, height);
+		hp = -1;
 	}
 }
