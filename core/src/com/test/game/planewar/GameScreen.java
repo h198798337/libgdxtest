@@ -107,7 +107,7 @@ public class GameScreen extends Stage implements Screen, EnemyDestriber, CrashCh
 		// TODO Auto-generated method stub
 		for (int i = 0; i < enemies.size(); i++) {
 			Enemy tmp = enemies.get(i);
-			if(tmp.rectangle.overlaps(plane.rectangle)) {
+			if(tmp.hp > 0 && tmp.rectangle.overlaps(plane.rectangle)) {
 				plane.hp = tmp.hp = 0;
 				break;
 			}
