@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Plane extends Actor{
@@ -20,6 +21,8 @@ public class Plane extends Actor{
 	TextureRegion[][] planeRegion;
 	Animation planeFly;
 	Animation planeDestroy;
+	
+	Rectangle rectangle = new Rectangle();
 
 	public Plane(float x, float y, float width, float height) {
 		this.x = moveX = x;
@@ -83,6 +86,7 @@ public class Plane extends Actor{
 	 * 当战机仍然生存时动作
 	 */
 	private void planeAlive(Batch batch) {
+		rectangle.set(moveX + offsetX, moveY + offsetY, width, height);
 		batch.draw(planeFly.getKeyFrame(durationTime, true), moveX + offsetX, moveY + offsetY, width, height);
 	}
 	
@@ -92,6 +96,7 @@ public class Plane extends Actor{
 	 */
 	private void planeDestroy(Batch batch){
 		batch.draw(planeDestroy.getKeyFrame(durationTime), moveX + offsetX, moveY + offsetY, width, height);
-		hp = -1;
+		if(planeDestroy.isAnimationFinished(durationTime + 1000))
+			hp = -1;
 	}
 }

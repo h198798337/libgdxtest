@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Enemy extends Actor{
@@ -15,6 +16,7 @@ public class Enemy extends Actor{
 	
 	TextureRegion[][] enemy;
 	Animation enemyDestroyAnimation;//敌人被摧毁时动画
+	Rectangle rectangle = new Rectangle();
 	
 	public Enemy(int x, int y, int speed, int type) {
 		this.x = x;
@@ -49,12 +51,14 @@ public class Enemy extends Actor{
 	}
 	
 	private void enemyDestroy(Batch batch) {
-		batch.draw(enemy[0][0], x, y, width, height);
-		hp = -1;
+		batch.draw(enemyDestroyAnimation.getKeyFrame(durationTime), x, y, width, height);
+		if(enemyDestroyAnimation.isAnimationFinished(durationTime + 100))
+			hp = -1;
 	}
 	
 	private void enemyAlive(Batch batch) {
 		y -= speed;
+		rectangle.set(x, y, width, height);
 		batch.draw(enemy[0][0], x, y, width, height);
 	}
 }

@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-public class GameScreen extends Stage implements Screen,EnemyDestriber {
+public class GameScreen extends Stage implements Screen, EnemyDestriber, CrashChecker {
 	float groundOffsetY = 0;
 	int maxEnemyCount = 10;//最大敌人
 	int density = 15;//密度
@@ -69,6 +69,7 @@ public class GameScreen extends Stage implements Screen,EnemyDestriber {
 		}
 		plane.offsetX = 0;
 		plane.offsetY = getCamera().position.y - Gdx.graphics.getHeight()/2;
+		checkCrash();
 		destribeEnemy();
 		destroyEnemy();
 	}
@@ -97,6 +98,18 @@ public class GameScreen extends Stage implements Screen,EnemyDestriber {
 			Enemy tmp = enemies.get(i);
 			if(tmp.y < getCamera().position.y - Gdx.graphics.getHeight()/2 - tmp.width){
 				getRoot().removeActor(enemies.remove(i));
+			}
+		}
+	}
+	
+	@Override
+	public void checkCrash() {
+		// TODO Auto-generated method stub
+		for (int i = 0; i < enemies.size(); i++) {
+			Enemy tmp = enemies.get(i);
+			if(tmp.rectangle.overlaps(plane.rectangle)) {
+				plane.hp = tmp.hp = 0;
+				break;
 			}
 		}
 	}
