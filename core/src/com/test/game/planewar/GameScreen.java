@@ -114,6 +114,7 @@ public class GameScreen extends Stage implements Screen, EnemyDestriber, CrashCh
 			for(Bullet bullet : plane.bullets){
 				if(tmp.hp > 0 && bullet.rectangle.overlaps(tmp.rectangle)){
 					tmp.hp = tmp.hp = 0;
+					break;
 				}
 			}
 		}
