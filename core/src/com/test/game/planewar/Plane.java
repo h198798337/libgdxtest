@@ -1,5 +1,8 @@
 package com.test.game.planewar;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -8,10 +11,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Plane extends Actor{
+public class Plane extends Actor implements BulletDestribe{
 	int hp = 1;
 	
 	float durationTime = 0;
+	
+	float bulletDurationTime = 0.1f;//发射子弹时间间隔
+	float bulletDestribeTime = 0;//子弹分配时间
+	float bulletSpeed = 20;
 	
 	float x, y, moveX, moveY, offsetX, offsetY, 
 	touch_X, touch_Y, touchBaseX, touchBaseY, 
@@ -23,6 +30,8 @@ public class Plane extends Actor{
 	Animation planeDestroy;
 	
 	Rectangle rectangle = new Rectangle();
+	
+	List<Bullet> bullets = new ArrayList<Bullet>();
 
 	public Plane(float x, float y, float width, float height) {
 		this.x = moveX = x;
@@ -33,8 +42,7 @@ public class Plane extends Actor{
 		planeRegion = TextureRegion.split(plane, 71, 86);
 		
 		planeFly = new Animation(0.1f, planeRegion[0][0], planeRegion[1][0]);
-		planeDestroy = new Animation(1.8f, planeRegion[2][0], planeRegion[3][0], planeRegion[4][0], planeRegion[5][0]
-				, planeRegion[5][0], planeRegion[5][0], planeRegion[5][0], planeRegion[5][0]);
+		planeDestroy = new Animation(2f, planeRegion[2][0], planeRegion[3][0], planeRegion[4][0], planeRegion[5][0]);
 	}
 	
 	@Override
@@ -47,6 +55,8 @@ public class Plane extends Actor{
 			break;
 		case 1:
 			planeAlive(batch);
+			destribeBullet();
+			destroyBullet();
 			break;
 		default:
 			break;
@@ -96,7 +106,31 @@ public class Plane extends Actor{
 	 */
 	private void planeDestroy(Batch batch){
 		batch.draw(planeDestroy.getKeyFrame(durationTime), moveX + offsetX, moveY + offsetY, width, height);
-		if(planeDestroy.isAnimationFinished(durationTime + 1000))
+		if(planeDestroy.isAnimationFinished(8))
 			hp = -1;
+	}
+
+	@Override
+	public void destribeBullet() {
+		// TODO Auto-generated method stub
+		if(durationTime - bulletDestribeTime >= bulletDurationTime){
+			bulletDestribeTime = durationTime;
+			Bullet bullet = new Bullet(moveX + offsetX + width/2, moveY + offsetY, bulletSpeed);
+			bullets.add(bullet);
+			if(getStage() instanceof GameScreen){
+				getStage().addActor(bullet);
+			}
+		}
+	}
+
+	@Override
+	public void destroyBullet() {
+		// TODO Auto-generated method stub
+		for (int i = 0; i < bullets.size(); i++) {
+			Bullet tmp = bullets.get(i);
+			if(tmp.hp == 0 || tmp.y > getStage().getCamera().position.y + Gdx.graphics.getHeight()/2 + height){
+				getStage().getRoot().removeActor(bullets.remove(i));
+			}
+		}
 	}
 }

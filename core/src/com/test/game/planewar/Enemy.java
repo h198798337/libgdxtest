@@ -52,7 +52,7 @@ public class Enemy extends Actor{
 	
 	private void enemyDestroy(Batch batch) {
 		batch.draw(enemyDestroyAnimation.getKeyFrame(durationTime), x, y, width, height);
-		if(enemyDestroyAnimation.isAnimationFinished(durationTime + 100))
+		if(enemyDestroyAnimation.isAnimationFinished(5))
 			hp = -1;
 	}
 	

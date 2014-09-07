@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 public class GameScreen extends Stage implements Screen, EnemyDestriber, CrashChecker {
 	float groundOffsetY = 0;
 	int maxEnemyCount = 10;//最大敌人
-	int density = 15;//密度
+	int density = 10;//密度
 	
 	Random random;
 	
@@ -110,6 +110,11 @@ public class GameScreen extends Stage implements Screen, EnemyDestriber, CrashCh
 			if(tmp.hp > 0 && tmp.rectangle.overlaps(plane.rectangle)) {
 				plane.hp = tmp.hp = 0;
 				break;
+			}
+			for(Bullet bullet : plane.bullets){
+				if(tmp.hp > 0 && bullet.rectangle.overlaps(tmp.rectangle)){
+					tmp.hp = tmp.hp = 0;
+				}
 			}
 		}
 	}
